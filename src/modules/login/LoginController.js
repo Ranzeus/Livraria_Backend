@@ -8,7 +8,7 @@ class LoginController {
 
     async login(req, res){
         try {
-            const loginResult = await this.LoginBusiness.login(req.body.user, req.body.password);
+            const loginResult = await this.LoginBusiness.login(req.body);
             res.send(loginResult);
         }catch (err) {
             res.status(400).send({error: err})

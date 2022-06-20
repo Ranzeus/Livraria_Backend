@@ -7,9 +7,20 @@ class BooksRepository {
         this.prismaClient = new PrismaClient();
     };
 
-    async listBooks(id, title, status, author){ //FALTA IMPLEMENTAR A PESQUISA POR ALGUM ATRIBUTO
+    async listBooks(){
         try {
             const listResult = await this.prismaClient.books.findMany();
+            return listResult;
+        }catch (err) {
+            console.log("cascateia o erro")//#########
+            throw this.msgError;
+        }
+    }
+
+    async searchBooks(key, value){
+        try {
+            const query = await this._mountSearchQuery(key, value);
+            const listResult = await this.prismaClient.books.findMany(query);
             return listResult;
         }catch (err) {
             console.log("cascateia o erro")//#########
@@ -34,11 +45,19 @@ class BooksRepository {
 
     async hentBook(id){
         try {
-            console.log("chama BookRepository")
-            return this.msg;
+            console.log("mudando status do livro")
+            await this.prismaClient.books.update({
+                where:{
+                    id,
+                },
+                data: {
+                    status:true
+                }
+            });
+            return {message: `O Livro foi Alugado com Sucesso.`};
         }catch (err) {
-            console.log("cascateia o erro")
-            throw this.msgError;
+            console.log("Erro ao alugar o livro")
+            throw "Erro ao alugar o livro";
         }
     }
 
@@ -59,7 +78,7 @@ class BooksRepository {
         }
     }
 
-    async updateBook(id, title, status, author){
+    async updateBook(id, title, author){
         try {
             console.log("Atualizando livro")
             await this.prismaClient.books.update({
@@ -68,7 +87,6 @@ class BooksRepository {
                 },
                 data: {
                     title,
-                    status,
                     author
                 }
             });
@@ -87,11 +105,23 @@ class BooksRepository {
                     id,
                 }
             });
-            return 'O Livro foi Removido da Base de Dados com Sucesso.';
+            return {message: 'O Livro foi Removido da Base de Dados com Sucesso.'};
         }catch (err) {
             console.log("cascateia o erro")
             throw this.msgError;
         }
     }
+
+    async _mountSearchQuery(key, value){
+        let where = {};
+        where[`${key}`] = {
+            equals: value
+        }
+        const query = {
+            where:where
+        }
+        return query
+    };
+
 }
 module.exports = BooksRepository;

@@ -8,7 +8,7 @@ class BooksController {
 
     async listBooks(req, res){
         try {
-            const listResult = await this.bookBusiness.listBooks(req.body.id, req.body.title, req.body.status, req.body.author);
+            const listResult = await this.bookBusiness.listBooks(req.body);
             res.send(listResult);
         }catch (err) {
             res.status(400).send({error: err})
@@ -44,7 +44,7 @@ class BooksController {
 
     async updateBook(req, res){
         try {
-            const updateResult = await this.bookBusiness.updateBook(req.body.id, req.body.title, req.body.status, req.body.author);
+            const updateResult = await this.bookBusiness.updateBook(req.body.id, req.body.title, req.body.author);
             res.send(updateResult);
         }catch (err) {
             res.status(400).send({error: err})

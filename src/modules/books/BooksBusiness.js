@@ -1,4 +1,4 @@
-const BooksRepository= require('./booksRepository')
+const BooksRepository= require('./BooksRepository')
 
 class BooksBusiness {
     constructor() {
@@ -7,14 +7,26 @@ class BooksBusiness {
         this.booksRepository = new BooksRepository();
     };
 
-    async listBooks(id, title, status, author){
+    async listBooks(data){
         try {
-            console.log("chama BookRepository") //######### FALTA IMPLEMENTAR A PESQUISA
-            const listResult =  this.booksRepository.listBooks(id, title, status, author);
+            let listResult = {};
+            console.log("chama BookRepository")
+            if (!data.id && !data.title && !data.title && !data.author){
+                listResult =  this.booksRepository.listBooks();
+            }else if(data.id && !data.title && !data.author){
+                listResult =  await this.booksRepository.searchBooks("id", data.id);
+            }else if(!data.id && data.title && !data.author){
+                listResult =  await this.booksRepository.searchBooks("title", data.title);
+            }else if(!data.id && !data.title && data.author) {
+                listResult = await this.booksRepository.searchBooks("author", data.author);
+            }else{
+                listResult =  this.booksRepository.listBooks();
+            }
             return listResult;
+
         }catch (err) {
             console.log("cascateia o erro")
-            throw this.msgError;
+            throw err;
         }
     }
 
@@ -31,11 +43,16 @@ class BooksBusiness {
 
     async hentBook(id){
         try {
-            console.log("chama BookRepository")
-            return this.msg;
+            console.log("chama BookRepository");
+            const isHent = await this._isHentBook(id)
+            if (isHent){
+                throw `O Livro ja esta Alugado`;
+            }
+            const hentResult = await this.booksRepository.hentBook(id);
+            return hentResult;
         }catch (err) {
             console.log("cascateia o erro")
-            throw this.msgError;
+            throw err;
         }
     }
 
@@ -50,14 +67,14 @@ class BooksBusiness {
         }
     }
 
-    async updateBook(id, title, status, author){
+    async updateBook(id, title, author){
         try {
             console.log("chama BookRepository");
-            const isHent = await this.detailBook(id);
-            if (isHent.status){
-                throw `O Livro ${isHent.title} esta Alugado e nao Pode ser Atualizado na Base de dados`;
+            const isHent = await this._isHentBook(id);
+            if (isHent){
+                throw `O Livro ${title} esta Alugado e nao Pode ser Atualizado na Base de dados`;
             }
-            const updateResult = await this.booksRepository.updateBook(id, title, status, author);
+            const updateResult = await this.booksRepository.updateBook(id, title, author);
             return updateResult;
         }catch (err) {
             console.log(`Erro ao tentar Atualizar o Livro`)
@@ -68,8 +85,8 @@ class BooksBusiness {
     async removeBook(id){
         try {
             console.log("chama BookRepository");
-            const isHent = await this.detailBook(id);
-            if (isHent.status){
+            const isHent = await this._isHentBook(id);
+            if (isHent){
                 throw `O Livro ${isHent.title} esta Alugado e nao Pode ser Removido da Base de dados`;
             }
             const removeResult = await this.booksRepository.removeBook(id);
@@ -79,5 +96,11 @@ class BooksBusiness {
             throw err;
         }
     }
+
+    async _isHentBook(id){
+        const isHent = await this.detailBook(id);
+        return isHent.status;
+    }
+
 }
 module.exports = BooksBusiness;

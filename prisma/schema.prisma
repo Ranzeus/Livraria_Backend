@@ -10,15 +10,15 @@ datasource db {
   url      = "postgresql://postgres:123qwe@localhost:5435"
 }
 
-model user_login{
-    id Int @id @default(autoincrement())
-    status Boolean
-    name String
-}
-
 model books{
     id Int @id @default(autoincrement())
     status Boolean
     title String
     author String
+}
+
+model user{
+    cpf Int @id @unique
+    name String
+    password String
 }
