@@ -1,0 +1,35 @@
+{
+  "name": "livraria_backend",
+  "version": "1.0.0",
+  "description": "backend para uma livraria, com rodas de login e CRUD de livros, acesso a banco de dados relacional etc",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "teste"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ranzeus/Livraria_Backend.git"
+  },
+  "keywords": [
+    "Livraria"
+  ],
+  "author": "Ranzeus Muniz",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Ranzeus/Livraria_Backend/issues"
+  },
+  "homepage": "https://github.com/Ranzeus/Livraria_Backend#readme",
+  "dependencies": {
+    "@prisma/client": "^3.15.2",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "mongoose": "^5.13.3",
+    "prisma": "^3.15.2",
+    "require-dir": "^1.2.0",
+    "validator": "^13.1.17"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.16"
+  }
+}
