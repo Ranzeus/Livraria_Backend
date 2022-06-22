@@ -12,7 +12,6 @@ class BooksRepository {
             const listResult = await this.prismaClient.books.findMany();
             return listResult;
         }catch (err) {
-            console.log("cascateia o erro")//#########
             throw this.msgError;
         }
     }
@@ -23,14 +22,12 @@ class BooksRepository {
             const listResult = await this.prismaClient.books.findMany(query);
             return listResult;
         }catch (err) {
-            console.log("cascateia o erro")//#########
             throw this.msgError;
         }
     }
 
     async detailBook(id){
         try {
-            console.log("Pesquisando Livro na Base de Dados")
             const detailResult = await this.prismaClient.books.findUnique({
                 where:{
                     id,
@@ -38,14 +35,12 @@ class BooksRepository {
             });
             return detailResult;
         }catch (err) {
-            console.log("Livro Não Encontrado na Base de Dados")
             throw "Livro Não Encontrado na Base de Dados";
         }
     }
 
     async hentBook(id){
         try {
-            console.log("mudando status do livro")
             await this.prismaClient.books.update({
                 where:{
                     id,
@@ -56,14 +51,12 @@ class BooksRepository {
             });
             return {message: `O Livro foi Alugado com Sucesso.`};
         }catch (err) {
-            console.log("Erro ao alugar o livro")
             throw "Erro ao alugar o livro";
         }
     }
 
     async registerBook(title, status, author){
         try {
-            console.log("Consultando o banco de dados");
             await this.prismaClient.books.create({
                 data: {
                     title,
@@ -73,14 +66,12 @@ class BooksRepository {
             })
             return {message: `Livro ${title} foi cadastrado com sucesso.`};
         }catch (err) {
-            console.log("cascateia o erro do repository")
             throw err;
         }
     }
 
     async updateBook(id, title, author){
         try {
-            console.log("Atualizando livro")
             await this.prismaClient.books.update({
                 where:{
                     id,
@@ -92,14 +83,12 @@ class BooksRepository {
             });
             return {message: `O livro ${title} foi atualizado com sucesso.`};
         }catch (err) {
-            console.log("cascateia o erro")
             throw `Erro ao Tentar Atualizar o Livro ${title}.`;
         }
     }
 
     async removeBook(id){
         try {
-            console.log("Removendo Livro da bBase de Dados")
             const resultDetail = await this.prismaClient.books.delete({
                 where:{
                     id,
@@ -107,7 +96,6 @@ class BooksRepository {
             });
             return {message: 'O Livro foi Removido da Base de Dados com Sucesso.'};
         }catch (err) {
-            console.log("cascateia o erro")
             throw this.msgError;
         }
     }

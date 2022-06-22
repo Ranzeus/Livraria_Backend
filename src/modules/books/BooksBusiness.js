@@ -10,9 +10,8 @@ class BooksBusiness {
     async listBooks(data){
         try {
             let listResult = {};
-            console.log("chama BookRepository")
             if (!data.id && !data.title && !data.title && !data.author){
-                listResult =  this.booksRepository.listBooks();
+                listResult = await this.booksRepository.listBooks();
             }else if(data.id && !data.title && !data.author){
                 listResult =  await this.booksRepository.searchBooks("id", data.id);
             }else if(!data.id && data.title && !data.author){
@@ -20,30 +19,26 @@ class BooksBusiness {
             }else if(!data.id && !data.title && data.author) {
                 listResult = await this.booksRepository.searchBooks("author", data.author);
             }else{
-                listResult =  this.booksRepository.listBooks();
+                listResult = await this.booksRepository.listBooks();
             }
             return listResult;
 
         }catch (err) {
-            console.log("cascateia o erro")
             throw err;
         }
     }
 
     async detailBook(id){
         try {
-            console.log("chama BookRepository")
             const detailResult =  this.booksRepository.detailBook(id);
             return detailResult;
         }catch (err) {
-            console.log("cascateia o erro")
             throw this.msgError;
         }
     }
 
     async hentBook(id){
         try {
-            console.log("chama BookRepository");
             const isHent = await this._isHentBook(id)
             if (isHent){
                 throw `O Livro ja esta Alugado`;
@@ -51,48 +46,41 @@ class BooksBusiness {
             const hentResult = await this.booksRepository.hentBook(id);
             return hentResult;
         }catch (err) {
-            console.log("cascateia o erro")
             throw err;
         }
     }
 
-    async registerBook(title, status, author){
+    async registerBook(data){
         try {
-            const registerResult = await this.booksRepository.registerBook(title, status, author);
-            console.log("Result:",registerResult);
+            const registerResult = await this.booksRepository.registerBook(data.title, data.status, data.author);
             return registerResult;
         }catch (err) {
-            console.log("cascateia o erro")
             throw this.msgError;
         }
     }
 
-    async updateBook(id, title, author){
+    async updateBook(data){
         try {
-            console.log("chama BookRepository");
-            const isHent = await this._isHentBook(id);
+            const isHent = await this._isHentBook(data.id);
             if (isHent){
-                throw `O Livro ${title} esta Alugado e nao Pode ser Atualizado na Base de dados`;
+                throw `O Livro esta Alugado e nao Pode ser Atualizado na Base de dados`;
             }
-            const updateResult = await this.booksRepository.updateBook(id, title, author);
+            const updateResult = await this.booksRepository.updateBook(data.id, data.title, data.author);
             return updateResult;
         }catch (err) {
-            console.log(`Erro ao tentar Atualizar o Livro`)
             throw err;
         }
     }
 
     async removeBook(id){
         try {
-            console.log("chama BookRepository");
             const isHent = await this._isHentBook(id);
             if (isHent){
-                throw `O Livro ${isHent.title} esta Alugado e nao Pode ser Removido da Base de dados`;
+                throw `O Livro esta Alugado e nao Pode ser Removido da Base de dados`;
             }
             const removeResult = await this.booksRepository.removeBook(id);
             return removeResult;
         }catch (err) {
-            console.log("Erro ao Remover Livro da Base de Dados")
             throw err;
         }
     }
