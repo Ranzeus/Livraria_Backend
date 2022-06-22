@@ -35,7 +35,7 @@ class BooksController {
 
     async registerBook(req, res){
         try {
-            const registerResult = await this.bookBusiness.registerBook(req.body.title, req.body.status, req.body.author);
+            const registerResult = await this.bookBusiness.registerBook(req.body);
             res.send(registerResult);
         }catch (err) {
             res.status(400).send({error: err})
@@ -44,7 +44,7 @@ class BooksController {
 
     async updateBook(req, res){
         try {
-            const updateResult = await this.bookBusiness.updateBook(req.body.id, req.body.title, req.body.author);
+            const updateResult = await this.bookBusiness.updateBook(req.body);
             res.send(updateResult);
         }catch (err) {
             res.status(400).send({error: err})

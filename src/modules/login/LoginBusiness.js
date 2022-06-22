@@ -12,7 +12,6 @@ class LoginBusiness {
 
     async login(data){
         try {
-            console.log(this.msg);
             let listOfUsers = await this.loginRepository.searchUser(data.name);
             let user = listOfUsers[0];
             if (user && user.password === data.password) {
@@ -25,7 +24,6 @@ class LoginBusiness {
                 return response;
             }
         }catch (err) {
-            console.log(this.msgError)//#########
             throw this.msgError;
         }
     }
